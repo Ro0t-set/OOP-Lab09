@@ -14,7 +14,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-
+import java.util.Arrays;
+import java.util.stream.Collectors;
 /**
  * Modify this small program adding new filters.
  * Realize this exercise using as much as possible the Stream library.
@@ -35,7 +36,18 @@ public final class LambdaFilter extends JFrame {
     private static final long serialVersionUID = 1760990730218643730L;
 
     private enum Command {
-        IDENTITY("No modifications", Function.identity());
+        IDENTITY("No modifications", Function.identity()),
+    	LOWERCASE("lowercase", (String::toLowerCase)),
+    	COUNT_CHAR("count char",(str ->  Integer.toString(str.length()))),
+    	COUNT_LINES("count lines",(str ->  Long.toString(str.chars().filter(e -> e == '\n').count() +1))),
+    	ALFABERIC_ORDER("alfabetic order",(str ->
+        Arrays.stream(str.split(""))
+        .sorted()
+        .collect(Collectors.joining("\n")))),
+    	WORDCOUNT("word count", 
+    			(str -> Arrays.stream(str.split(" ")).map(i -> str.getAndIncrement() + " -> " + i) 
+    	        .collect(Collectors.joining("\n"))
+    			));
 
         private final String commandName;
         private final Function<String, String> fun;
